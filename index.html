@@ -2,151 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cryptic - Live Crypto Prices</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      background: #0f0f0f;
-      color: #f1f1f1;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 40px 20px;
-    }
-
-    h1 {
-      color: #00ffd5;
-      margin-bottom: 30px;
-      font-size: 2.5rem;
-      animation: glow 2s infinite alternate;
-    }
-
-    @keyframes glow {
-      from { text-shadow: 0 0 5px #00ffd5; }
-      to { text-shadow: 0 0 20px #00ffd5; }
-    }
-
-    .card {
-      background: #1c1c1c;
-      border: 1px solid #2c2c2c;
-      border-radius: 16px;
-      padding: 20px 30px;
-      margin: 15px;
-      min-width: 260px;
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 20px #00ffd5aa;
-    }
-
-    .price {
-      font-size: 2rem;
-      color: #00ffd5;
-      margin-top: 10px;
-    }
-
-    .spinner {
-      border: 6px solid #333;
-      border-top: 6px solid #00ffd5;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 40px auto;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .error {
-      color: #ff4b4b;
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    footer {
-      margin-top: 40px;
-      color: #666;
-      font-size: 0.9rem;
-    }
-  </style>
+  <title>Crypto Wallet Login</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-
-  <h1>Cryptic 💰</h1>
-
-  <div id="spinner" class="spinner"></div>
-
-  <div id="cryptoContainer" style="display: none;"></div>
-
-  <div id="error" class="error"></div>
-
-  <footer>Powered by CoinMarketCap</footer>
+<body class="centered">
+  <div class="login-box">
+    <h1>Crypto Wallet Login</h1>
+    <input type="text" id="walletInput" placeholder="Enter Wallet ID" />
+    <button onclick="fakeLogin()">Log In</button>
+  </div>
 
   <script>
-    const apiKey = "2be3423c-fde1-420a-8b0a-95cb85a328b0";
-    const cryptoSymbols = ["BTC", "ETH", "DOGE", "SOL"];
-    const names = {
-      BTC: "Bitcoin",
-      ETH: "Ethereum",
-      DOGE: "Dogecoin",
-      SOL: "Solana"
-    };
-
-    async function fetchPrices() {
-      const spinner = document.getElementById("spinner");
-      const container = document.getElementById("cryptoContainer");
-      const errorDiv = document.getElementById("error");
-
-      try {
-        const res = await fetch("https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=" + cryptoSymbols.join(","),
-          {
-            headers: {
-              "X-CMC_PRO_API_KEY": apiKey
-            }
-          });
-
-        const data = await res.json();
-
-        if (!data.data) throw new Error("Invalid API response.");
-
-        container.innerHTML = "";
-
-        cryptoSymbols.forEach(symbol => {
-          const price = data.data[symbol].quote.USD.price.toFixed(2);
-
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `
-            <h2>${names[symbol]}</h2>
-            <div class="price">$${price}</div>
-          `;
-
-          container.appendChild(card);
-        });
-
-        spinner.style.display = "none";
-        container.style.display = "flex";
-        container.style.flexWrap = "wrap";
-        container.style.justifyContent = "center";
-
-      } catch (err) {
-        spinner.style.display = "none";
-        errorDiv.textContent = "Failed to load data: " + err.message;
+    function fakeLogin() {
+      const walletId = document.getElementById('walletInput').value;
+      if (walletId.length < 10) {
+        alert("Wallet ID must be at least 10 characters.");
+        return;
       }
+      localStorage.setItem("walletId", walletId);
+      localStorage.setItem("walletBalance", "31000");
+      location.href = "dashboard.html";
     }
-
-    fetchPrices();
   </script>
-
 </body>
 </html>
